@@ -1,1 +1,1 @@
-# StripeApp
+# StripeApp (Next.js)
