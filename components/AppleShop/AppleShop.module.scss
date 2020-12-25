@@ -1,0 +1,63 @@
+.shop {
+  padding: 10px 20px 40px 20px;
+}
+
+.shopName {
+  font-size: 18px;
+  color: #fff;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 26.4px;
+  margin-bottom: 20px;
+}
+
+.shopControls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+
+  button {
+    display: inline-block;
+    width: 30px;
+    line-height: 38px;
+    color: #fff;
+    height: 40px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #ff6a6a;
+    user-select: none;
+    box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #ffb9f6;
+    outline: none;
+    border: none;
+  }
+}
+
+.shopInput {
+  width: 80px;
+  padding: 0 12px;
+  vertical-align: top;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  outline: none;
+  background: rgb(255, 182, 182);
+  border: 1px solid #819efc;
+  color: #fff;
+  height: 40px;
+  user-select: none;
+  outline: none;
+  border: none;
+}
+
+.shopDecrButton {
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+}
+
+.shopIncrButton {
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+}
