@@ -1,7 +1,7 @@
 import PropsTypes from 'prop-types';
 import styles from './FormField.module.scss';
 
-export default function FormField({ label, type, name, placeholder, required }) {
+export default function FormField({ label, type, name, placeholder }) {
   return (
     <div className={styles.formFieldContainer}>
       <label
@@ -21,3 +21,10 @@ export default function FormField({ label, type, name, placeholder, required }) 
     </div>
   );
 }
+
+FormField.propTypes = {
+  label: PropsTypes.string,
+  type: PropsTypes.string,
+  name: PropsTypes.string,
+  placeholder: PropsTypes.string
+};
