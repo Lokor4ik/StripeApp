@@ -4,13 +4,45 @@ import Router from "next/router";
 import MainLayout from "components/Layout";
 import AppleShop from "components/AppleShop/AppleShop";
 import CheckoutForm from "components/CheckoutForm/CheckoutForm";
+import getApplePrice from "utils/get-apple-price";
+
+const shopConfig = {
+  minCount: 1,
+  maxCount: 15
+};
 
 export default function MainPage() {
   const [numApples, setNumApples] = useState(1);
+  const [message, setMessage] = useState('');
 
-  // TODO: need to refactor
-  const addApple = () => setNumApples(num => Math.min(12, num + 1));
-  const remApple = () => setNumApples(num => Math.max(1, num - 1));
+  const layoutFunc = (count, num, msg) => {
+    switch (numApples) {
+      case count:
+        setMessage(msg);
+        break;
+
+      default:
+        setNumApples(prevNum => prevNum - num);
+        message && setMessage('');
+        break;
+    }
+  };
+
+  const addApple = () => {
+    const { maxCount } = shopConfig;
+    const num = '-1';
+    const msg = 'Max 15 apples';
+
+    layoutFunc(maxCount, num, msg);
+  };
+
+  const remApple = () => {
+    const { minCount } = shopConfig;
+    const num = '1';
+    const msg = 'Min 1 apple';
+
+    layoutFunc(minCount, num, msg);
+  };
 
   return (
     <MainLayout title='Apple Shop'>
@@ -18,9 +50,10 @@ export default function MainPage() {
         onAddApple={addApple}
         onRemoveApple={remApple}
         numApples={numApples}
+        countMessage={message}
       />
       <CheckoutForm
-        price={numApples}
+        price={getApplePrice(numApples)}
         onSuccessfulCheckout={() => Router.push("/success")}
       />
     </MainLayout>
