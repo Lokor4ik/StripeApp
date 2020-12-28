@@ -4,14 +4,13 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import styles from './CheckoutForm.module.scss';
 import BillingDetailsFields from "components/BillingDetailsFields/BillingDetailsFields";
-
+import CheckoutError from "components/CheckoutError/CheckoutError";
 export default function CheckoutForm({ price, onSuccessfulCheckout }) {
   const [isProcessing, setProcessingTo] = useState(false);
   const [checkoutError, setCheckoutError] = useState();
 
   const stripe = useStripe();
   const elements = useElements();
-
   // TIP
   // use the cardElements onChange prop to add a handler
   // for setting any errors:
@@ -55,6 +54,7 @@ export default function CheckoutForm({ price, onSuccessfulCheckout }) {
         return;
       }
 
+      console.log(clientSecret);
       const { error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: paymentMethodReq.paymentMethod.id
       });
@@ -85,9 +85,7 @@ export default function CheckoutForm({ price, onSuccessfulCheckout }) {
 
   const iframeStyles = {
     base: {
-      color: "#fff",
       fontSize: "16px",
-      iconColor: "#fff",
       "::placeholder": {
         color: "#87bbfd"
       }
@@ -123,15 +121,18 @@ export default function CheckoutForm({ price, onSuccessfulCheckout }) {
       {checkoutError && <CheckoutError>{checkoutError}</CheckoutError>}
       <div>
         {/* TIP always disable your submit button while processing payments */}
-        <SubmitButton disabled={isProcessing || !stripe}>
+        <button
+          className={styles.checkoutButton}
+          disabled={isProcessing || !stripe}
+        >
           {isProcessing ? "Processing..." : `Pay $${price}`}
-        </SubmitButton>
+        </button>
       </div>
     </form>
   );
 }
 
 CheckoutForm.propTypes = {
-  price: PropsTypes.number,
+  price: PropsTypes.string,
   onSuccessfulCheckout: PropsTypes.func
 };
