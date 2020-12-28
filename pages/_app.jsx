@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+import '../styles/globals.scss';
 import PropsTypes from 'prop-types';
 
 function MyApp({ Component, pageProps }) {
