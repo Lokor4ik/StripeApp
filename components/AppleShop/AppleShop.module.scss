@@ -3,10 +3,11 @@
 }
 
 .shopName {
-  font-size: 18px;
-  color: #fff;
+  font-size: 28px;
+  color: #ff6a6a;
   font-style: normal;
   font-variant: normal;
+  text-shadow: 1px 1px 10px black;
   font-weight: 400;
   line-height: 26.4px;
   margin-bottom: 20px;
@@ -60,4 +61,8 @@
 .shopIncrButton {
   border-left: none;
   border-radius: 0 4px 4px 0;
+}
+
+.shopImg {
+  fill: red;
 }

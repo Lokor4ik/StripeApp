@@ -1,17 +1,17 @@
 import PropsTypes from 'prop-types';
-import Image from 'next/image';
+import AppleImg from "public/apple.svg";
 import styles from './AppleShop.module.scss';
-
-export default function AppleShop({ onAddApple, onRemoveApple, numApples }) {
+export default function AppleShop({ onAddApple, onRemoveApple, numApples, countMessage }) {
   return (
     <div className={styles.shop}>
       <h1 className={styles.shopName}>Apple stripe</h1>
-      <Image
-        src="/apple.png"
-        alt="Picture of the apple"
+      <AppleImg
         width={100}
         height={100}
+        fill='#d6301a'
       />
+
+      {countMessage && countMessage}
 
       <div className={styles.shopControls}>
         <button
@@ -40,5 +40,6 @@ export default function AppleShop({ onAddApple, onRemoveApple, numApples }) {
 AppleShop.propTypes = {
   onAddApple: PropsTypes.func,
   onRemoveApple: PropsTypes.func,
-  numApples: PropsTypes.number
+  numApples: PropsTypes.number,
+  countMessage: PropsTypes.string
 };
