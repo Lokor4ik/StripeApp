@@ -1,10 +1,9 @@
 import { useState } from "react";
-import Router from "next/router";
-
 import MainLayout from "components/Layout";
 import AppleShop from "components/AppleShop/AppleShop";
 import CheckoutForm from "components/CheckoutForm/CheckoutForm";
 import getApplePrice from "utils/get-apple-price";
+import Modal from "components/Modal/Modal";
 
 const shopConfig = {
   minCount: 1,
@@ -14,6 +13,21 @@ const shopConfig = {
 export default function MainPage() {
   const [numApples, setNumApples] = useState(1);
   const [message, setMessage] = useState('');
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [isProcessing, setProcessingTo] = useState(false);
+
+  const handleProcess = (flag) => {
+    setProcessingTo(flag);
+  };
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setProcessingTo(false);
+  };
 
   const layoutFunc = (count, num, msg) => {
     switch (numApples) {
@@ -50,11 +64,18 @@ export default function MainPage() {
         onAddApple={addApple}
         onRemoveApple={remApple}
         numApples={numApples}
-        countMessage={message}
+        scopeMessage={message}
+        isProcessing={isProcessing}
       />
       <CheckoutForm
         price={getApplePrice(numApples)}
-        onSuccessfulCheckout={() => Router.push("/success")}
+        onSuccessfulCheckout={openModal}
+        isProcessing={isProcessing}
+        handleProcess={handleProcess}
+      />
+      <Modal
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
       />
     </MainLayout>
   );
