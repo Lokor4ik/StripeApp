@@ -1,26 +1,44 @@
 import { useState } from "react";
 import PropsTypes from 'prop-types';
+import classNames from 'classnames';
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import axios from "axios";
-import styles from './CheckoutForm.module.scss';
 import BillingDetailsFields from "components/BillingDetailsFields/BillingDetailsFields";
 import CheckoutError from "components/CheckoutError/CheckoutError";
-export default function CheckoutForm({ price, onSuccessfulCheckout }) {
-  const [isProcessing, setProcessingTo] = useState(false);
+import styles from './CheckoutForm.module.scss';
+import paymentMethod from "services/payment";
+export default function CheckoutForm({
+  price,
+  onSuccessfulCheckout,
+  isProcessing,
+  handleProcess
+}) {
   const [checkoutError, setCheckoutError] = useState();
 
   const stripe = useStripe();
   const elements = useElements();
-  // TIP
-  // use the cardElements onChange prop to add a handler
-  // for setting any errors:
 
   const handleCardDetailsChange = ev => {
     ev.error ? setCheckoutError(ev.error.message) : setCheckoutError();
   };
 
+  const clsxButton = classNames({
+    [styles.checkoutButton]: true,
+    [styles.checkoutButtonDisable]: isProcessing || !stripe
+  });
+
+  const clsxForms = classNames({
+    [styles.checkoutFromsBox]: true,
+    [styles.disabledFromsBox]: isProcessing
+  });
+
+  const handleError = (errorMsg) => {
+    setCheckoutError(errorMsg);
+  };
+
   const handleFormSubmit = async ev => {
     ev.preventDefault();
+
+    handleProcess(true);
 
     const billingDetails = {
       name: ev.target.name.value,
@@ -32,70 +50,32 @@ export default function CheckoutForm({ price, onSuccessfulCheckout }) {
         postal_code: ev.target.zip.value
       }
     };
-
-    setProcessingTo(true);
-
     const cardElement = elements.getElement("card");
 
-    try {
-      const { data: clientSecret } = await axios.post("/api/payment_intents", {
-        amount: price * 100
-      });
-
-      const paymentMethodReq = await stripe.createPaymentMethod({
-        type: "card",
-        card: cardElement,
-        billing_details: billingDetails
-      });
-
-      if (paymentMethodReq.error) {
-        setCheckoutError(paymentMethodReq.error.message);
-        setProcessingTo(false);
-        return;
-      }
-
-      console.log(clientSecret);
-      const { error } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: paymentMethodReq.paymentMethod.id
-      });
-
-      if (error) {
-        setCheckoutError(error.message);
-        setProcessingTo(false);
-        return;
-      }
-
-      onSuccessfulCheckout();
-    } catch (err) {
-      setCheckoutError(err.message);
-    }
+    await paymentMethod(
+      billingDetails,
+      cardElement,
+      price,
+      stripe,
+      onSuccessfulCheckout,
+      handleProcess,
+      handleError
+    );
   };
-
-  // Learning
-  // A common ask/bug that users run into is:
-  // How do you change the color of the card element input text?
-  // How do you change the font-size of the card element input text?
-  // How do you change the placeholder color?
-  // The answer to all of the above is to use the `style` option.
-  // It's common to hear users confused why the card element appears impervious
-  // to all their styles. No matter what classes they add to the parent element
-  // nothing within the card element seems to change. The reason for this is that
-  // the card element is housed within an iframe and:
-  // > styles do not cascade from a parent window down into its iframes
 
   const iframeStyles = {
     base: {
       fontSize: "16px",
       "::placeholder": {
-        color: "#87bbfd"
+        color: "#a0a0a0"
       }
     },
     invalid: {
-      iconColor: "#FFC7EE",
-      color: "#FFC7EE"
+      iconColor: "red",
+      color: "red"
     },
     complete: {
-      iconColor: "#cbf4c9"
+      iconColor: "#47a747"
     }
   };
 
@@ -106,23 +86,23 @@ export default function CheckoutForm({ price, onSuccessfulCheckout }) {
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <div>
+    <form
+      className={styles.checkoutForm}
+      onSubmit={handleFormSubmit}
+    >
+      <div className={clsxForms}>
         <BillingDetailsFields />
-      </div>
-      <div>
+
         <div className={styles.cardElementContainer}>
           <CardElement
             options={cardElementOpts}
             onChange={handleCardDetailsChange}
           />
+          {checkoutError && <CheckoutError>{checkoutError}</CheckoutError>}
         </div>
-      </div>
-      {checkoutError && <CheckoutError>{checkoutError}</CheckoutError>}
-      <div>
-        {/* TIP always disable your submit button while processing payments */}
+
         <button
-          className={styles.checkoutButton}
+          className={clsxButton}
           disabled={isProcessing || !stripe}
         >
           {isProcessing ? "Processing..." : `Pay $${price}`}
@@ -134,5 +114,7 @@ export default function CheckoutForm({ price, onSuccessfulCheckout }) {
 
 CheckoutForm.propTypes = {
   price: PropsTypes.string,
-  onSuccessfulCheckout: PropsTypes.func
+  onSuccessfulCheckout: PropsTypes.func,
+  isProcessing: PropsTypes.bool,
+  handleProcess: PropsTypes.func
 };
