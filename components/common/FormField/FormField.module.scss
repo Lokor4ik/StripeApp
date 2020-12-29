@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   margin-left: 15px;
-  border-top: 1px solid #819efc;
+  border-top: 1px solid #b1b1b1;
 
   &:first-of-type {
     border-top: none;
@@ -13,12 +13,12 @@
   width: 20%;
   min-width: 70px;
   padding: 11px 0;
-  color: #c4f0ff;
+  color: #424242;
   overflow: hidden;
   font-size: 16px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  border-right: 1px solid #819efc;
+  border-right: 1px solid #b1b1b1;
 }
 
 .formFieldInput {
@@ -27,8 +27,10 @@
   padding: 11px 15px 11px 8px;
   background-color: transparent;
   animation: 1ms void-animation-out;
+  outline: none;
+  border: none;
 
   &::placeholder {
-    color: #87bbfd;
+    color: #a0a0a0;
   }
 }
