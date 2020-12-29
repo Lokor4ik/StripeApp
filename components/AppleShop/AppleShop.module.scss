@@ -1,23 +1,42 @@
 .shop {
-  padding: 10px 20px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px 30px 20px;
 }
 
 .shopName {
   font-size: 28px;
-  color: #ff6a6a;
+  color: #3b3b3b;
   font-style: normal;
-  font-variant: normal;
-  text-shadow: 1px 1px 10px black;
+  text-shadow: 1px 1px 25px #a53838b4;
   font-weight: 400;
   line-height: 26.4px;
   margin-bottom: 20px;
+}
+
+.shopControlsWrapper {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.shopControlsMessage {
+  font-size: 14px;
+  color: #7b7b7b;
+
+  span {
+    &:first-child {
+      color: red;
+      margin-right: 3px;
+    }
+  }
 }
 
 .shopControls {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 5px;
 
   button {
     display: inline-block;
@@ -36,18 +55,20 @@
   }
 }
 
+.shopControlsDisabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .shopInput {
   width: 80px;
   padding: 0 12px;
-  vertical-align: top;
   font-size: 16px;
   font-weight: bold;
   text-align: center;
   outline: none;
   background: rgb(255, 182, 182);
-  border: 1px solid #819efc;
   color: #fff;
-  height: 40px;
   user-select: none;
   outline: none;
   border: none;
